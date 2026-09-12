@@ -1,0 +1,147 @@
+.archive-viewport {
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  position: relative;
+  user-select: none;
+  font-family: -apple-system, BlinkMacSystemFont, "Pretendard", sans-serif;
+  cursor: default;
+}
+
+/* 상단 버튼 */
+.archive-back-btn {
+  position: absolute;
+  top: 36px;
+  left: 40px;
+  background: transparent;
+  border: none;
+  font-size: 16px;
+  font-weight: 500;
+  color: #747474;
+  cursor: pointer;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 0;
+  outline: none;
+}
+
+.archive-back-btn:hover {
+  color: #040404;
+}
+
+.archive-back-btn:hover {
+  opacity: 0.7;
+}
+
+/* 좌측 하단 텍스트 */
+.archive-bottom-guide {
+  position: absolute;
+  bottom: 36px;
+  left: 40px;
+  pointer-events: none;
+  z-index: 20;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.archive-bottom-guide p {
+  margin: 0;
+  font-size: 15px;
+  color: #c1c1c1;
+  line-height: 1.5;
+  font-weight: 400;
+  letter-spacing: -0.01em;
+}
+
+.main-archive-canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  cursor: grab;
+}
+
+.main-archive-canvas:active {
+  cursor: grabbing;
+}
+
+/* 모달  */
+.message-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: rgba(9, 15, 25, 0.42);
+}
+
+.polaroid-modal-card {
+  position: relative;
+  width: 320px;
+  background: #FFFFFF;
+  border-radius: 12px;
+  padding: 20px 20px 28px 20px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  animation: popIn 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes popIn {
+  from {
+    opacity: 0;
+    transform: scale(0.94) translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+/* 내부 이미지 영역  */
+.polaroid-image-area {
+  position: relative;
+  width: 100%;
+  height: 250px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  background-color: #fafafae0;
+  border-radius: 4px;
+  box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.05), inset 0 0 2px rgba(0, 0, 0, 0.04);
+}
+
+.polaroid-object-img {
+  width: 190px;
+  height: 190px;
+  object-fit: contain;
+  display: block;
+  user-select: none;
+  pointer-events: none;
+}
+
+/* 하단 텍스트 영역 */
+.polaroid-text-area {
+  width: 100%;
+  margin-top: 18px;
+  padding: 0 4px;
+  box-sizing: border-box;
+}
+
+.polaroid-caption-text {
+  margin: 0;
+  font-size: 13.5px;
+  color: #1E293B;
+  line-height: 1.55;
+  text-align: left;
+  word-break: break-all;
+  font-weight: 400;
+}

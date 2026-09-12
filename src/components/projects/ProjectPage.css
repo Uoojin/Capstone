@@ -1,0 +1,279 @@
+.project-page-container {
+  width: 100%;
+  padding: 60px;
+  display: flex;
+  gap: 80px;
+  align-items: stretch;
+}
+
+/* 좌측 ---------------------- */
+.project-sidebar {
+  width: 220px;
+  flex-shrink: 0;
+}
+
+.project-sidebar::-webkit-scrollbar {
+  display: none;
+}
+
+.category-group {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.category-accordion-item {
+  display: flex;
+  flex-direction: column;
+}
+
+.category-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-align: left;
+  font-size: 15px;
+  font-weight: 500;
+  color: #111;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px 0;
+}
+
+.category-btn:hover .category-btn-text {
+  font-weight: 700;
+}
+
+.accordion-arrow {
+  font-size: 16px;
+  line-height: 1;
+  color: #444;
+  display: inline-block;
+  transition: transform 0.2s cubic-bezier(0.25, 0.1, 0.25, 1);
+  transform: rotate(0deg);
+}
+
+.accordion-arrow.open {
+  transform: rotate(90deg);
+}
+
+.category-btn-text {
+  letter-spacing: -0.01em;
+}
+
+/* 카테고리 ---------------------- */
+.sub-category-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding-left: 20px;
+  margin-top: 8px;
+  margin-bottom: 8px;
+}
+
+.sub-category-list.animated-open {
+  animation: fadeInSlide 0.2s ease-out forwards;
+}
+
+@keyframes fadeInSlide {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.sub-category-btn {
+  text-align: left;
+  background: none;
+  border: none;
+  font-size: 13px;
+  color: #666;
+  cursor: pointer;
+  padding: 3px 0;
+  transition: color 0.15s ease, transform 0.15s ease;
+}
+
+.sub-category-btn:hover {
+  color: #000;
+  font-weight: 600;
+  transform: translateX(2px);
+}
+
+.sidebar-divider {
+  width: 100%;
+  height: 0.5px;
+  background-color: #ccc;
+  margin: 36px 0;
+}
+
+
+.sidebar-project-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+
+
+  transition: transform 0.65s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform;
+}
+
+.sidebar-list-item {
+  display: flex;
+  gap: 25px;
+  font-size: 14px;
+  color: #333;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.sidebar-list-item:hover {
+  color: #000;
+  font-weight: 700;
+}
+
+.item-num {
+  width: 20px;
+}
+
+/* 우측 ---------------------- */
+.project-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.filter-header-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  width: 100%;
+  gap: 16px;
+  animation: fadeInSlide 0.25s ease-out;
+}
+
+.selected-tags-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+
+.selected-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 25px;
+  padding: 6px 14px;
+  border: 1px solid #adadad;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 400;
+  color: #5a5a5a;
+  background-color: #fff;
+  transition: all 0.15s ease;
+}
+
+.tag-remove-btn {
+  background: none;
+  border: none;
+  font-size: 11px;
+  color: #5a5a5a;
+  cursor: pointer;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  line-height: 1;
+}
+
+.clear-all-btn {
+  background: none;
+  border: none;
+  font-size: 15px;
+  font-weight: 400;
+  color: #adadad;
+  cursor: pointer;
+  padding: 0;
+  white-space: nowrap;
+  transition: color 0.2s ease;
+}
+
+.clear-all-btn:hover {
+  color: #000;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.project-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+}
+
+.empty-card {
+  width: 100%;
+  aspect-ratio: 4 / 5;
+  background-color: transparent;
+}
+
+
+/* 반응형 ---------------------- */
+@media (max-width: 1024px) {
+  .project-page-container {
+    padding: 40px;
+    gap: 40px;
+  }
+
+  .project-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 767px) {
+  .site-header {
+    display: none;
+  }
+
+  .project-page-container {
+    flex-direction: column;
+    padding: 120px 24px 60px 24px;
+    gap: 0;
+  }
+
+  .project-sidebar {
+    display: none;
+    position: static;
+    height: auto;
+  }
+
+  .project-content {
+    width: 100%;
+  }
+
+  .filter-header-bar {
+    margin-bottom: 24px;
+  }
+
+  .project-grid {
+    grid-template-columns: 1fr;
+    gap: 48px;
+  }
+
+  .empty-card {
+    display: none;
+  }
+
+  .sidebar-divider,
+  .sidebar-project-list {
+    display: none;
+  }
+
+  .category-group {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+}

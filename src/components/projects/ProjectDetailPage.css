@@ -1,0 +1,517 @@
+/* 공통 */
+.detail-page-container {
+  width: 100%;
+  position: relative;
+  background-color: #FFFFFF;
+  overflow-x: hidden;
+}
+
+.draft-tester {
+  position: fixed;
+  top: 16px;
+  left: 16px;
+  display: flex;
+  gap: 8px;
+  z-index: 9999;
+}
+
+.draft-tester button {
+  padding: 6px 12px;
+  font-size: 12px;
+  border: 1px solid #ddd;
+  background: rgba(255, 255, 255, 0.9);
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.draft-tester button.active {
+  background: #111;
+  color: #fff;
+  border-color: #111;
+}
+
+
+.close-btn {
+  position: fixed;
+  top: 40px;
+  right: 60px;
+  font-size: 20px;
+  font-weight: 200;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #888;
+  line-height: 1;
+  z-index: 1000;
+}
+
+.project-title {
+  font-size: 32px;
+  font-weight: 500;
+  margin-bottom: 35px;
+  letter-spacing: -0.01em;
+}
+
+.project-slogan {
+  font-size: 17px;
+  font-weight: 400;
+  margin-bottom: 15px;
+  color: #111;
+}
+
+.project-desc {
+  font-size: 14px;
+  line-height: 1.65;
+  color: #444;
+  margin-bottom: 35px;
+  word-break: keep-all;
+}
+
+.project-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: 32px;
+}
+
+.project-meta p {
+  font-size: 13px;
+  color: #9c9c9c;
+  margin: 0;
+  font-weight: 300;
+}
+
+.project-meta span {
+  display: inline-block;
+  width: 36px;
+  color: #999;
+
+}
+
+.divider {
+  border: none;
+  border-top: 0.5px solid #E0E0E0;
+  margin: 50px 0;
+}
+
+.team-name {
+  font-size: 20px;
+  font-weight: 500;
+  margin-bottom: 30px;
+  color: #111;
+}
+
+.members-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 25px 0;
+}
+
+.member-item {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.member-name {
+  font-size: 15px;
+  font-weight: 400;
+  color: #111;
+}
+
+.member-role {
+  font-size: 13px;
+  font-weight: 300;
+  color: #c3c3c3;
+  letter-spacing: -0.02em;
+}
+
+
+/* 시안 1 -------------------------------- */
+.draft-1-layout {
+  display: flex;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.left-scroll-area {
+  flex: 1.15;
+  height: 100vh;
+  overflow-y: scroll;
+  scroll-snap-type: y mandatory;
+}
+
+.left-scroll-area::-webkit-scrollbar {
+  display: none;
+}
+
+.snap-section {
+  width: 100%;
+  height: 100vh;
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  box-sizing: border-box;
+}
+
+.work-section {
+  background: linear-gradient(180deg, #EDF1F5 0%, #DCE2E8 100%);
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.team-img-section {
+  background-color: #CAD3DC;
+  font-size: 16px;
+  color: #6C7A89;
+}
+
+.extra-img-section {
+  background-color: #B9C4D0;
+  font-size: 16px;
+  color: #536270;
+}
+
+.scroll-indicator {
+  position: absolute;
+  bottom: 40px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  font-size: 10px;
+  letter-spacing: 0.05em;
+  color: #111;
+}
+
+.scroll-indicator .dot {
+  width: 5px;
+  height: 5px;
+  background-color: #111;
+  border-radius: 50%;
+}
+
+.right-fixed-area {
+  flex: 0.85;
+  height: 100vh;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 0 80px 70px 80px;
+  box-sizing: border-box;
+}
+
+.info-bottom-wrapper {
+  width: 100%;
+  max-width: 1020px;
+}
+
+
+/* 시안2 -------------------------------- */
+
+.draft-2-scroll-wrapper {
+  width: 100%;
+  min-height: 100vh;
+  box-sizing: border-box;
+}
+
+.d2-section {
+  display: flex;
+  width: 100%;
+  min-height: calc(100vh - 120px);
+  gap: 80px;
+}
+
+.top-project-section {
+  display: flex;
+  width: 100vw;
+  height: 100vh;
+  gap: 0;
+  align-items: flex-end;
+  margin-bottom: 0;
+}
+
+
+.d2-work-box {
+  flex: 1.15;
+  height: 100vh;
+  text-decoration: none;
+  cursor: pointer;
+  display: block;
+}
+
+.d2-work-bg {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(180deg, #EDF1F5 0%, #DCE2E8 100%);
+  border-radius: 0;
+
+}
+
+
+.d2-project-info {
+  flex: 0.85;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 0 80px 60px 80px;
+  box-sizing: border-box;
+}
+
+
+.bottom-team-section {
+  display: flex;
+  width: 100%;
+  min-height: calc(100vh - 120px);
+  align-items: flex-start;
+  padding: 150px 0;
+  box-sizing: border-box;
+  gap: 0;
+}
+
+
+.d2-team-left {
+  flex: 1.15;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 0 80px;
+  box-sizing: border-box;
+  max-width: 1000px;
+}
+
+
+.d2-team-left .team-name {
+  font-size: 20px;
+  font-weight: 500;
+  margin-bottom: 50px;
+  color: #111;
+}
+
+.d2-members-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 36px 20px;
+}
+
+
+.d2-members-grid .member-name {
+  font-size: 15px;
+  font-weight: 400;
+  color: #111;
+}
+
+.d2-members-grid .member-role {
+  font-size: 13px;
+  color: #888;
+  letter-spacing: 0.02em;
+  margin-top: 2px;
+}
+
+
+.d2-team-left .divider {
+  border: none;
+  border-top: 0.5px solid #E0E0E0;
+  margin: 48px 0;
+}
+
+.d2-handwriting-box {
+  margin-top: 25px;
+}
+
+.handwriting-text {
+  font-family: 'Nanum Pen Script', 'Caveat', cursive, sans-serif;
+  font-size: 42px;
+  color: #222;
+  margin: 0;
+
+}
+
+
+.d2-team-right {
+  flex: 0.85;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0 80px;
+  box-sizing: border-box;
+}
+
+
+.d2-team-photo-placeholder {
+  width: 100%;
+  max-width: 700px;
+  height: 500px;
+  background-color: #E2E7EC;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #7A8997;
+  font-size: 15px;
+  border-radius: 4px;
+  margin-top: 10px;
+}
+
+
+.d2-bottom-nav {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  padding: 40px 80px 60px 80px;
+  box-sizing: border-box;
+  border-top: 0.5px solid #EAEAEA;
+}
+
+.nav-arrow-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 0;
+  text-align: left;
+}
+
+.nav-arrow-btn.next {
+  text-align: right;
+  align-items: flex-end;
+}
+
+.arrow-title {
+  font-size: 15px;
+  font-weight: 400;
+  color: #111;
+  letter-spacing: 0.05em;
+  margin-bottom: 3px;
+}
+
+.arrow-name {
+  font-size: 15px;
+  font-weight: 300;
+  color: #b6b6b6;
+}
+
+/* 시안 3 -------------------------------- */
+.draft-3-scroll-wrapper {
+  width: 100%;
+  min-height: 100vh;
+  box-sizing: border-box;
+}
+
+
+.d3-top-project-section {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-end;
+  box-sizing: border-box;
+}
+
+
+.d3-full-bg-link {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+
+.d3-full-bg {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(180deg, #EDF1F5 0%, #DCE2E8 100%);
+}
+
+
+.d3-project-info {
+  position: relative;
+  z-index: 2;
+  pointer-events: auto;
+  max-width: 800px;
+  padding: 0 0 60px 80px;
+  box-sizing: border-box;
+}
+
+
+.d3-team-left {
+  flex: 1.15;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 0 80px;
+  box-sizing: border-box;
+  max-width: 1000px;
+}
+
+.d3-team-left .team-name {
+  font-size: 20px;
+  font-weight: 500;
+  margin-bottom: 50px;
+  color: #111;
+}
+
+.d3-members-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 36px 20px;
+}
+
+.d3-members-grid .member-name {
+  font-size: 15px;
+  font-weight: 400;
+  color: #111;
+}
+
+.d3-members-grid .member-role {
+  font-size: 13px;
+  color: #888;
+  letter-spacing: 0.02em;
+  margin-top: 2px;
+}
+
+.d3-team-left .divider {
+  border: none;
+  border-top: 0.5px solid #E0E0E0;
+  margin: 48px 0;
+}
+
+.d3-handwriting-box {
+  margin-top: 25px;
+}
+
+
+.d3-team-right {
+  flex: 0.85;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0 80px;
+  box-sizing: border-box;
+}
+
+.d3-team-photo-placeholder {
+  width: 100%;
+  max-width: 700px;
+  height: 500px;
+  background-color: #E2E7EC;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #7A8997;
+  font-size: 15px;
+  border-radius: 4px;
+  margin-top: 10px;
+}

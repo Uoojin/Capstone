@@ -1,0 +1,54 @@
+.site-header {
+  position: sticky;
+  top: 0;
+  width: 100%;
+  height: 80px;
+  background-color: #FFFFFF;
+  z-index: 1000;
+  border-bottom: 0.5px solid #EAEAEA;
+}
+
+.header-inner {
+  width: 100%;
+  height: 100%;
+  padding: 0 60px;
+  box-sizing: border-box;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.header-logo {
+  font-size: 16px;
+  font-weight: 500;
+  color: #111;
+  text-decoration: none;
+  letter-spacing: -0.01em;
+}
+
+.header-nav {
+  display: flex;
+  gap: 32px;
+  align-items: center;
+}
+
+.nav-link {
+  font-size: 13px;
+  font-weight: 500;
+  color: #000000;
+  text-decoration: none;
+  letter-spacing: 0.05em;
+  transition: color 0.2s ease;
+}
+
+.nav-link.active {
+  color: #111;
+  font-weight: 500;
+}
+
+/* 📱 모바일 (767px 이하): 헤더 숨김 */
+@media (max-width: 767px) {
+  .site-header {
+    display: none;
+  }
+}

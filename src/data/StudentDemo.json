@@ -1,0 +1,142 @@
+[
+    {
+        "studentId": "s01",
+        "name": "김00",
+        "role": "PLANNER",
+        "project": "ProjectName",
+        "profileImg": ""
+    },
+    {
+        "studentId": "s02",
+        "name": "이00",
+        "role": "DESIGNER",
+        "project": "ProjectName",
+        "profileImg": ""
+    },
+    {
+        "studentId": "s03",
+        "name": "박00",
+        "role": "PROGRAMMER",
+        "project": "ProjectName",
+        "profileImg": ""
+    },
+    {
+        "studentId": "s04",
+        "name": "최00",
+        "role": "DESIGNER",
+        "project": "ProjectName",
+        "profileImg": ""
+    },
+    {
+        "studentId": "s05",
+        "name": "정00",
+        "role": "PLANNER",
+        "project": "ProjectName",
+        "profileImg": ""
+    },
+    {
+        "studentId": "s06",
+        "name": "한00",
+        "role": "PROGRAMMER",
+        "project": "ProjectName",
+        "profileImg": ""
+    },
+    {
+        "studentId": "s07",
+        "name": "강00",
+        "role": "DESIGNER",
+        "project": "ProjectName",
+        "profileImg": ""
+    },
+    {
+        "studentId": "s08",
+        "name": "윤00",
+        "role": "DESIGNER",
+        "project": "ProjectName",
+        "profileImg": ""
+    },
+    {
+        "studentId": "s09",
+        "name": "임00",
+        "role": "PLANNER",
+        "project": "ProjectName",
+        "profileImg": ""
+    },
+    {
+        "studentId": "s10",
+        "name": "서00",
+        "role": "PROGRAMMER",
+        "project": "ProjectName",
+        "profileImg": ""
+    },
+    {
+        "studentId": "s11",
+        "name": "송00",
+        "role": "DESIGNER",
+        "project": "ProjectName",
+        "profileImg": ""
+    },
+    {
+        "studentId": "s12",
+        "name": "신00",
+        "role": "PLANNER",
+        "project": "ProjectName",
+        "profileImg": ""
+    },
+    {
+        "studentId": "s13",
+        "name": "표00",
+        "role": "PROGRAMMER",
+        "project": "ProjectName",
+        "profileImg": ""
+    },
+    {
+        "studentId": "s14",
+        "name": "황00",
+        "role": "DESIGNER",
+        "project": "ProjectName",
+        "profileImg": ""
+    },
+    {
+        "studentId": "s15",
+        "name": "전00",
+        "role": "PLANNER",
+        "project": "ProjectName",
+        "profileImg": ""
+    },
+    {
+        "studentId": "s16",
+        "name": "안00",
+        "role": "PROGRAMMER",
+        "project": "ProjectName",
+        "profileImg": ""
+    },
+    {
+        "studentId": "s17",
+        "name": "조00",
+        "role": "DESIGNER",
+        "project": "ProjectName",
+        "profileImg": ""
+    },
+    {
+        "studentId": "s18",
+        "name": "손00",
+        "role": "PLANNER",
+        "project": "ProjectName",
+        "profileImg": ""
+    },
+    {
+        "studentId": "s19",
+        "name": "유00",
+        "role": "DESIGNER",
+        "project": "ProjectName",
+        "profileImg": ""
+    },
+    {
+        "studentId": "s20",
+        "name": "문00",
+        "role": "PROGRAMMER",
+        "project": "ProjectName",
+        "profileImg": ""
+    }
+]

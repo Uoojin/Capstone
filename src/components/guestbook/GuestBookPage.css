@@ -1,0 +1,33 @@
+.guestbook-container {
+  width: 100%;
+  height: calc(100vh - 80px);
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  padding-bottom: 15vh; 
+  box-sizing: border-box;
+}
+
+.guestbook-action-buttons {
+  display: flex;
+  gap: 20px;
+}
+
+.guestbook-btn {
+  width: 170px;
+  height: 48px;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  font-size: 15px;
+  font-weight: 500;
+  color: #111;
+  cursor: pointer;
+  letter-spacing: 0.05em;
+  transition: all 0.2s ease;
+}
+
+.guestbook-btn:hover {
+  background-color: #111;
+  color: #fff;
+  border-color: #111;
+}
