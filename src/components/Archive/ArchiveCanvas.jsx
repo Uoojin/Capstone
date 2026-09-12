@@ -12,7 +12,6 @@ function getStoredSyncCount(id, dbCount) {
 function saveSyncCount(id, count) {
   if (!id) return;
   localStorage.setItem(`sync_count_${id}`, String(count));
-  // Supabase 컬럼 sync_count가 있을 경우 비동기 동기화
   supabase
     .from('artifacts')
     .update({ sync_count: count })
