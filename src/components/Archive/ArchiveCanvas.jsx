@@ -2,22 +2,20 @@ import { useEffect, useRef, useState } from 'react';
 import { supabase } from '../../lib/supabase.js';
 import './ArchiveCanvas.css';
 
-function getStoredSyncCount(id, dbCount) {
-  const localVal = localStorage.getItem(`sync_count_${id}`);
-  const parsedLocal = localVal !== null ? parseInt(localVal, 10) : 0;
-  const parsedDb = typeof dbCount === 'number' ? dbCount : 0;
-  return Math.max(parsedLocal, parsedDb);
-}
-
-function saveSyncCount(id, count) {
+async function incrementSyncInDB(id) {
   if (!id) return;
-  localStorage.setItem(`sync_count_${id}`, String(count));
-  supabase
-    .from('artifacts')
-    .update({ sync_count: count })
-    .eq('id', id)
-    .then(() => { })
-    .catch(() => { });
+  try {
+    const { error } = await supabase.rpc('increment_artifact_sync', { artifact_id: id });
+    if (error) throw error;
+  } catch (rpcErr) {
+    try {
+      const { data } = await supabase.from('artifacts').select('sync_count').eq('id', id).single();
+      const current = data?.sync_count || 0;
+      await supabase.from('artifacts').update({ sync_count: current + 1 }).eq('id', id);
+    } catch (updateErr) {
+      console.warn('Sync update failed:', rpcErr || updateErr);
+    }
+  }
 }
 
 function formatSyncCount(count) {
@@ -103,7 +101,7 @@ class Artifact {
     this.color = color || '#38BDF8';
     this.message = message || '';
     this.createdAt = createdAt || new Date().toISOString();
-    this.syncCount = getStoredSyncCount(id, syncCount);
+    this.syncCount = typeof syncCount === 'number' ? syncCount : 0;
 
     this.directionX = Math.random() < 0.5 ? -1 : 1;
     this.baseSpeed = 2.35 + Math.random() * 0.95;
@@ -133,7 +131,7 @@ class Artifact {
 
   addSync() {
     this.syncCount = (this.syncCount || 0) + 1;
-    saveSyncCount(this.id, this.syncCount);
+    incrementSyncInDB(this.id);
   }
 
   buildAlphaHull() {
@@ -550,6 +548,23 @@ export default function ArchiveCanvas({ onNavigateToEditor }) {
               new Artifact(row.id, x, y, img, row.dominant_color, row.message, row.created_at, row.sync_count)
             );
           };
+        }
+      )
+      .on(
+        'postgres_changes',
+        { event: 'UPDATE', schema: 'public', table: 'artifacts' },
+        (payload) => {
+          const updated = payload.new;
+          const target = artifactsRef.current.find((a) => a.id === updated.id);
+          if (target && typeof updated.sync_count === 'number') {
+            target.syncCount = updated.sync_count;
+            setSelectedMessage((prev) => {
+              if (prev && prev.id === target.id) {
+                return { ...prev, syncCount: target.syncCount };
+              }
+              return prev;
+            });
+          }
         }
       )
       .subscribe();
@@ -1369,10 +1384,7 @@ export default function ArchiveCanvas({ onNavigateToEditor }) {
             {/* 싱크 및 날짜 */}
             <div className="polaroid-footer-meta">
               <span className="polaroid-sync-info">
-                SYNC
-                <span className="polaroid-sync-count">
-                  {formatSyncCount(selectedMessage.syncCount)}
-                </span>
+                SYNC 🔗 {formatSyncCount(selectedMessage.syncCount)}
               </span>
               <span className="polaroid-date-info">
                 {formatDate(selectedMessage.createdAt)}
