@@ -527,16 +527,16 @@
   }
 
   .drawing-frame {
-    width: min(100%, 700px);
-    height: min(45vh, 500px);
+    width: min(100%, 600px);
+    height: min(35vh, 500px);
     border-radius: 16px;
   }
 
   .tools-panel {
     width: min(100%, 300px);
-    height: 190px;
+    height: 100px;
     position: relative;
-    top: 3%;
+    top: 5%;
   }
 
   .tool-icons-row {
