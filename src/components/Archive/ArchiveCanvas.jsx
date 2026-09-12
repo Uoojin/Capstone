@@ -2,6 +2,41 @@ import { useEffect, useRef, useState } from 'react';
 import { supabase } from '../../lib/supabase.js';
 import './ArchiveCanvas.css';
 
+function getStoredSyncCount(id, dbCount) {
+  const localVal = localStorage.getItem(`sync_count_${id}`);
+  const parsedLocal = localVal !== null ? parseInt(localVal, 10) : 0;
+  const parsedDb = typeof dbCount === 'number' ? dbCount : 0;
+  return Math.max(parsedLocal, parsedDb);
+}
+
+function saveSyncCount(id, count) {
+  if (!id) return;
+  localStorage.setItem(`sync_count_${id}`, String(count));
+  // Supabase 컬럼 sync_count가 있을 경우 비동기 동기화
+  supabase
+    .from('artifacts')
+    .update({ sync_count: count })
+    .eq('id', id)
+    .then(() => { })
+    .catch(() => { });
+}
+
+function formatSyncCount(count) {
+  if (!count || count < 0) return '0';
+  if (count < 1000) return `${count}`;
+  return `${(count / 1000).toFixed(1).replace(/\.0$/, '')}K`;
+}
+
+function formatDate(dateString) {
+  if (!dateString) return '';
+  const d = new Date(dateString);
+  if (isNaN(d.getTime())) return '';
+  const yy = String(d.getFullYear()).slice(-2);
+  const mm = String(d.getMonth() + 1).padStart(2, '0');
+  const dd = String(d.getDate()).padStart(2, '0');
+  return `${yy}.${mm}.${dd}`;
+}
+
 function getCroppedImageUrl(imgElement) {
   if (!imgElement || !imgElement.complete) return imgElement?.src || '';
   try {
@@ -61,7 +96,7 @@ function getCroppedImageUrl(imgElement) {
 
 // ----------------------------------------------------------------------------
 class Artifact {
-  constructor(id, x, y, imgElement, color, message, createdAt) {
+  constructor(id, x, y, imgElement, color, message, createdAt, syncCount) {
     this.id = id;
     this.x = x;
     this.y = y;
@@ -69,6 +104,7 @@ class Artifact {
     this.color = color || '#38BDF8';
     this.message = message || '';
     this.createdAt = createdAt || new Date().toISOString();
+    this.syncCount = getStoredSyncCount(id, syncCount);
 
     this.directionX = Math.random() < 0.5 ? -1 : 1;
     this.baseSpeed = 2.35 + Math.random() * 0.95;
@@ -94,6 +130,11 @@ class Artifact {
     this.alphaHull = null;
     this.visualDominantColor = this.color;
     this.buildAlphaHull();
+  }
+
+  addSync() {
+    this.syncCount = (this.syncCount || 0) + 1;
+    saveSyncCount(this.id, this.syncCount);
   }
 
   buildAlphaHull() {
@@ -383,6 +424,7 @@ export default function ArchiveCanvas({ onNavigateToEditor }) {
   const canvasRef = useRef(null);
   const artifactsRef = useRef([]);
   const cameraRef = useRef({ x: 0, y: 0 });
+  const activeHoldPairsRef = useRef(new Set());
 
   const dragStateRef = useRef({
     target: null,
@@ -484,7 +526,7 @@ export default function ArchiveCanvas({ onNavigateToEditor }) {
         img.onload = () => {
           const { x, y } = getSpreadPosition();
           artifactsRef.current.push(
-            new Artifact(row.id, x, y, img, row.dominant_color, row.message, row.created_at)
+            new Artifact(row.id, x, y, img, row.dominant_color, row.message, row.created_at, row.sync_count)
           );
         };
       });
@@ -506,7 +548,7 @@ export default function ArchiveCanvas({ onNavigateToEditor }) {
           img.onload = () => {
             const { x, y } = getSpreadPosition();
             artifactsRef.current.push(
-              new Artifact(row.id, x, y, img, row.dominant_color, row.message, row.created_at)
+              new Artifact(row.id, x, y, img, row.dominant_color, row.message, row.created_at, row.sync_count)
             );
           };
         }
@@ -557,6 +599,9 @@ export default function ArchiveCanvas({ onNavigateToEditor }) {
         mouse.holdProgress = Math.min(mouse.holdProgress + 0.04, 1);
       } else {
         mouse.holdProgress = Math.max(mouse.holdProgress - 0.08, 0);
+        if (mouse.holdProgress <= 0.05) {
+          activeHoldPairsRef.current.clear();
+        }
       }
 
       ctx.clearRect(0, 0, width, height);
@@ -608,6 +653,16 @@ export default function ArchiveCanvas({ onNavigateToEditor }) {
           if (mouse.holdProgress > 0.05) {
             if (distSq < HOLD_NETWORK_DIST_SQ && distSq > 4900) {
               networkLines.push(a.x, a.y, b.x, b.y);
+
+              const pairKey = a.id && b.id
+                ? (a.id < b.id ? `${a.id}_${b.id}` : `${b.id}_${a.id}`)
+                : `${i}_${j}`;
+
+              if (!activeHoldPairsRef.current.has(pairKey)) {
+                activeHoldPairsRef.current.add(pairKey);
+                a.addSync();
+                b.addSync();
+              }
 
               if ((i + j) % 3 === 0) {
                 const dist = Math.sqrt(distSq);
@@ -773,6 +828,9 @@ export default function ArchiveCanvas({ onNavigateToEditor }) {
             bestCandidate._dragRestDistance = Math.max(158, Math.min(230, bestDistance));
             dragState.connected.push(bestCandidate);
             dragState.lastConnectTime = currentTime;
+
+            draggedArtifact.addSync();
+            bestCandidate.addSync();
           }
         }
 
@@ -1177,6 +1235,7 @@ export default function ArchiveCanvas({ onNavigateToEditor }) {
           color: dragged.color,
           imageSrc: getCroppedImageUrl(dragged.imgElement),
           createdAt: dragged.createdAt,
+          syncCount: dragged.syncCount || 0,
           x: e.clientX,
           y: e.clientY,
         });
@@ -1247,6 +1306,7 @@ export default function ArchiveCanvas({ onNavigateToEditor }) {
           color: clicked.color,
           imageSrc: getCroppedImageUrl(clicked.imgElement),
           createdAt: clicked.createdAt,
+          syncCount: clicked.syncCount || 0,
           x: e.clientX,
           y: e.clientY,
         });
@@ -1305,6 +1365,19 @@ export default function ArchiveCanvas({ onNavigateToEditor }) {
               <p className="polaroid-caption-text">
                 {selectedMessage.text}
               </p>
+            </div>
+
+            {/* 싱크 및 날짜 */}
+            <div className="polaroid-footer-meta">
+              <span className="polaroid-sync-info">
+                SYNC
+                <span className="polaroid-sync-count">
+                  {formatSyncCount(selectedMessage.syncCount)}
+                </span>
+              </span>
+              <span className="polaroid-date-info">
+                {formatDate(selectedMessage.createdAt)}
+              </span>
             </div>
           </div>
         </div>

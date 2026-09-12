@@ -87,7 +87,7 @@
   width: 320px;
   background: #FFFFFF;
   border-radius: 12px;
-  padding: 20px 20px 28px 20px;
+  padding: 20px 20px 20px 20px;
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
@@ -138,10 +138,47 @@
 
 .polaroid-caption-text {
   margin: 0;
-  font-size: 13.5px;
+  font-size: 17px;
   color: #1E293B;
   line-height: 1.55;
   text-align: left;
   word-break: break-all;
   font-weight: 400;
+}
+
+/* 싱크 횟수 및 날짜 영역 */
+.polaroid-footer-meta {
+  width: 100%;
+  margin-top: 24px;
+  padding: 0 4px;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.polaroid-sync-info {
+  font-size: 15px;
+  font-weight: 400;
+  color: #959595;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  letter-spacing: -0.01em;
+}
+
+.polaroid-sync-count {
+  font-size: 15px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  color: #3a13ff;
+  margin-left: 4px;
+}
+
+.polaroid-date-info {
+  font-size: 15px;
+  font-weight: 400;
+  color: #959595;
+  letter-spacing: -0.01em;
 }
