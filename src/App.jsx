@@ -33,7 +33,7 @@ function ArchivePageWithNavigation() {
 
 function App() {
   return (
-    <BrowserRouter>
+    <BrowserRouter basename="/Capstone">
       <Routes>
 
         {/* with header */}
