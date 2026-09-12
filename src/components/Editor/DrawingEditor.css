@@ -6,7 +6,7 @@
 
 /* 화면 전체 레이아웃 */
 .editor-screen {
-  height: calc(100vh - 80px);
+  height: calc(100vh - 130px);
   overflow: hidden;
   background-color: #FFFFFF;
   display: flex;
@@ -445,4 +445,147 @@
   font-size: 13.5px;
   font-weight: 400;
   cursor: pointer;
+}
+
+@media (max-width: 1024px) {
+  .editor-screen {
+    height: calc(100vh - 130px);
+  }
+
+  .content-container {
+    overflow: hidden;
+    padding: 0 24px;
+  }
+
+  .title-heading {
+    font-size: 23px;
+    margin-bottom: 22px;
+    left: -17%;
+  }
+
+  .main-stage {
+    width: 100%;
+    justify-content: center;
+    gap: 36px;
+  }
+
+  .drawing-frame {
+    width: min(62vw, 500px);
+    height: min(50vw, 500px);
+  }
+
+  .canvas-layer {
+    width: 100%;
+    height: 100%;
+  }
+
+  .tools-panel {
+    width: min(30vw, 250px);
+    height: min(50vw, 500px);
+  }
+
+  .tool-icons-row {
+    gap: 12px;
+    margin-bottom: 36px;
+  }
+
+  .circle-icon-btn {
+    width: 44px;
+    height: 44px;
+  }
+
+  .palette-dot {
+    width: 28px;
+    height: 28px;
+  }
+
+  .oval-btn {
+    padding: 11px 30px;
+  }
+}
+
+@media (max-width: 767px) {
+  .editor-screen {
+    height: 100vh;
+  }
+
+  .content-container {
+    padding: 18px 16px;
+    justify-content: flex-start;
+  }
+
+  .title-heading {
+    font-size: 20px;
+    margin-bottom: 14px;
+    left: 0;
+  }
+
+  .main-stage {
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .drawing-frame {
+    width: min(100%, 700px);
+    height: min(45vh, 500px);
+    border-radius: 16px;
+  }
+
+  .tools-panel {
+    width: min(100%, 300px);
+    height: 190px;
+    position: relative;
+    top: 3%;
+  }
+
+  .tool-icons-row {
+    justify-content: center;
+    gap: 12px;
+    margin-bottom: 22px;
+  }
+
+  .circle-icon-btn {
+    width: 42px;
+    height: 42px;
+  }
+
+  .field-title {
+    margin-bottom: 18px;
+  }
+
+  .palette-flex {
+    justify-content: center;
+    gap: 8px;
+  }
+
+  .palette-dot {
+    width: 34px;
+    height: 34px;
+  }
+
+  .sticker-list-grid {
+    grid-template-columns: repeat(4, 42px);
+    justify-content: center;
+  }
+
+  .emoji-btn {
+    width: 42px;
+    height: 42px;
+  }
+
+  .bottom-action-wrap {
+    width: 100%;
+    justify-content: center;
+    position: relative;
+    top: 60%;
+  }
+
+  .oval-btn {
+    padding: 10px 28px;
+  }
+
+  .message-modal-card {
+    width: min(100%, 500px);
+  }
 }
