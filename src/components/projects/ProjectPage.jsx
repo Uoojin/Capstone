@@ -8,17 +8,17 @@ import '../projects/ProjectPage.css';
 const CATEGORY_GROUPS = [
   {
     id: 'medium',
-    name: '매체',
+    name: 'MEDIA',
     subCategories: ['APP', 'WEB', '미디어월', '키오스크', '영상']
   },
   {
     id: 'subject',
-    name: '주제',
+    name: 'SUBJECT',
     subCategories: ['건강/의료', '공공행정', '교육/학습', '금융/소비', '자연/환경']
   },
   {
     id: 'target',
-    name: '대상',
+    name: 'TARGET',
     subCategories: ['대학생/청년', '아동/청소년', '시니어', '외국인', '시민']
   }
 ];

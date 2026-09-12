@@ -30,7 +30,7 @@
 .category-btn {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
   text-align: left;
   font-size: 15px;
   font-weight: 500;
@@ -39,19 +39,34 @@
   border: none;
   cursor: pointer;
   padding: 4px 0;
+  line-height: 18px;
 }
 
 .category-btn:hover .category-btn-text {
-  font-weight: 700;
+  font-weight: 400;
 }
 
 .accordion-arrow {
-  font-size: 16px;
-  line-height: 1;
-  color: #444;
-  display: inline-block;
+  width: 14px;
+  height: 18px;
+  font-size: 0;
+  line-height: 0;
+  color: #aaaaaa;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   transition: transform 0.2s cubic-bezier(0.25, 0.1, 0.25, 1);
   transform: rotate(0deg);
+  transform-origin: center;
+}
+
+.accordion-arrow::before {
+  content: '';
+  width: 7px;
+  height: 7px;
+  border-right: 1px solid currentColor;
+  border-bottom: 1px solid currentColor;
+  transform: rotate(-45deg);
 }
 
 .accordion-arrow.open {
@@ -59,17 +74,21 @@
 }
 
 .category-btn-text {
+  display: inline-flex;
+  align-items: center;
+  line-height: 18px;
   letter-spacing: -0.01em;
 }
 
 /* 카테고리 ---------------------- */
 .sub-category-list {
+  
   display: flex;
   flex-direction: column;
   gap: 6px;
-  padding-left: 20px;
-  margin-top: 8px;
-  margin-bottom: 8px;
+  padding-left: 25px;
+  margin-top: 10px;
+  margin-bottom: 5px;
 }
 
 .sub-category-list.animated-open {
@@ -92,7 +111,7 @@
   text-align: left;
   background: none;
   border: none;
-  font-size: 13px;
+  font-size: 15px;
   color: #666;
   cursor: pointer;
   padding: 3px 0;
