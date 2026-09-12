@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Outlet, Route, Navigate, useNavigate } from 'react-router-dom';
+import { HashRouter, Routes, Outlet, Route, Navigate, useNavigate } from 'react-router-dom';
 import Header from './components/common/Header';
 import ProjectPage from '../src/components/projects/ProjectPage';
 import ProjectDetailPage from '../src/components/projects/ProjectDetailPage';
@@ -33,7 +33,7 @@ function ArchivePageWithNavigation() {
 
 function App() {
   return (
-    <BrowserRouter basename="/Capstone">
+    <HashRouter>
       <Routes>
 
         {/* with header */}
@@ -52,7 +52,7 @@ function App() {
         {/* <Route path="/students/:studentId" element={<StudentDetailPage />} /> */}
 
       </Routes>
-    </BrowserRouter>
+    </HashRouter>
   );
 }
 
