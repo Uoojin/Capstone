@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { supabase } from '../../lib/supabase.js';
 import stickerImage4 from '../../icon/image 4.png';
 import stickerImage5 from '../../icon/image 5.png';
@@ -6,10 +6,10 @@ import './DrawingEditor.css';
 
 const PRESET_COLORS = [
   '#FFFFFF',
+  '#000000',
   '#FF6B6B',
   '#FFEE58',
   '#6EE7B7',
-  '#67E8F9',
   '#818CF8'
 ];
 
@@ -35,6 +35,11 @@ export default function DrawingEditor({ onNavigateToArchive }) {
 
   const nextZIndex = useRef(10);
 
+  // 실행 취소(Undo) / 다시 실행(Redo) 
+  const [history, setHistory] = useState([]);
+  const [historyIndex, setHistoryIndex] = useState(-1);
+  const [hasEverModified, setHasEverModified] = useState(false);
+
   // 메시지 모달 
   const [isMessageModalOpen, setIsMessageModalOpen] = useState(false);
   const [userMessage, setUserMessage] = useState('');
@@ -56,7 +61,98 @@ export default function DrawingEditor({ onNavigateToArchive }) {
     initialY: 0
   });
 
-  
+  const getClientPoint = (e) => {
+    return e.touches?.[0] || e.changedTouches?.[0] || e;
+  };
+
+  const getCanvasPoint = (e) => {
+    const canvas = canvasRef.current;
+    const rect = canvas.getBoundingClientRect();
+    const point = getClientPoint(e);
+    return {
+      x: (point.clientX - rect.left) * (canvas.width / rect.width),
+      y: (point.clientY - rect.top) * (canvas.height / rect.height)
+    };
+  };
+
+  // 상태 저장
+  const saveSnapshot = (overridePlaced = null, overrideCanvas = null, isUserAction = false) => {
+    const canvas = overrideCanvas || canvasRef.current;
+    const canvasData = canvas ? canvas.toDataURL() : null;
+    const elems = overridePlaced !== null ? overridePlaced : placedElements;
+    const snap = {
+      canvasData,
+      placedElements: JSON.parse(JSON.stringify(elems.map(e => ({
+        ...e,
+        imgSrc: e.imgObj ? e.imgObj.src : ''
+      }))))
+    };
+
+    setHistory(prev => {
+      const updated = prev.slice(0, historyIndex + 1);
+      return [...updated, snap];
+    });
+    setHistoryIndex(prev => prev + 1);
+    if (isUserAction) {
+      setHasEverModified(true);
+    }
+  };
+
+  useEffect(() => {
+    if (history.length === 0 && canvasRef.current) {
+      saveSnapshot([], canvasRef.current, false);
+    }
+  }, []);
+
+  const restoreSnapshot = (snapshot) => {
+    if (!snapshot) return;
+
+    // 캔버스 복구
+    const canvas = canvasRef.current;
+    if (canvas) {
+      const ctx = canvas.getContext('2d');
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      if (snapshot.canvasData) {
+        const img = new Image();
+        img.onload = () => {
+          ctx.drawImage(img, 0, 0);
+          updateDrawingBoundingBox();
+        };
+        img.src = snapshot.canvasData;
+      } else {
+        setDrawingBound(null);
+      }
+    }
+
+    // 배치 요소 복구
+    const restored = snapshot.placedElements.map(item => {
+      const img = new Image();
+      img.src = item.imgSrc;
+      return {
+        ...item,
+        imgObj: img
+      };
+    });
+    setPlacedElements(restored);
+    setSelectedElemIndex(null);
+  };
+
+  const handleUndo = () => {
+    if (historyIndex > 0) {
+      const newIdx = historyIndex - 1;
+      setHistoryIndex(newIdx);
+      restoreSnapshot(history[newIdx]);
+    }
+  };
+
+  const handleRedo = () => {
+    if (historyIndex < history.length - 1) {
+      const newIdx = historyIndex + 1;
+      setHistoryIndex(newIdx);
+      restoreSnapshot(history[newIdx]);
+    }
+  };
+
   const updateDrawingBoundingBox = () => {
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -122,10 +218,9 @@ export default function DrawingEditor({ onNavigateToArchive }) {
 
   const startDrawing = (e) => {
     if (activeTool !== 'pen' && activeTool !== 'eraser') return;
+    e.preventDefault?.();
     const canvas = canvasRef.current;
-    const rect = canvas.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
+    const { x, y } = getCanvasPoint(e);
 
     const ctx = canvas.getContext('2d');
     ctx.beginPath();
@@ -145,10 +240,11 @@ export default function DrawingEditor({ onNavigateToArchive }) {
 
   const draw = (e) => {
     if (!isDrawing.current) return;
+    e.preventDefault?.();
     const canvas = canvasRef.current;
-    const rect = canvas.getBoundingClientRect();
+    const { x, y } = getCanvasPoint(e);
     const ctx = canvas.getContext('2d');
-    ctx.lineTo(e.clientX - rect.left, e.clientY - rect.top);
+    ctx.lineTo(x, y);
     ctx.stroke();
   };
 
@@ -156,6 +252,7 @@ export default function DrawingEditor({ onNavigateToArchive }) {
     if (!isDrawing.current) return;
     isDrawing.current = false;
     updateDrawingBoundingBox();
+    saveSnapshot(null, null, true);
   };
 
   const handleAddSticker = (sticker) => {
@@ -176,8 +273,10 @@ export default function DrawingEditor({ onNavigateToArchive }) {
         height: 80,
         zIndex: currentZ
       };
-      setPlacedElements(prev => [...prev, newElem]);
+      const updated = [...placedElements, newElem];
+      setPlacedElements(updated);
       setSelectedElemIndex(placedElements.length);
+      saveSnapshot(updated, null, true);
     };
     img.src = sticker.src;
   };
@@ -208,8 +307,10 @@ export default function DrawingEditor({ onNavigateToArchive }) {
           height: 140,
           zIndex: currentZ
         };
-        setPlacedElements(prev => [...prev, newElem]);
+        const updated = [...placedElements, newElem];
+        setPlacedElements(updated);
         setSelectedElemIndex(placedElements.length);
+        saveSnapshot(updated, null, true);
       };
       img.src = event.target.result;
     };
@@ -219,8 +320,10 @@ export default function DrawingEditor({ onNavigateToArchive }) {
 
   const handleDeleteElement = (index, e) => {
     e.stopPropagation();
-    setPlacedElements(prev => prev.filter((_, i) => i !== index));
+    const updated = placedElements.filter((_, i) => i !== index);
+    setPlacedElements(updated);
     setSelectedElemIndex(null);
+    saveSnapshot(updated, null, true);
   };
 
   const handleDeleteDrawing = (e) => {
@@ -232,11 +335,14 @@ export default function DrawingEditor({ onNavigateToArchive }) {
     }
     setDrawingBound(null);
     setSelectedElemIndex(null);
+    saveSnapshot(null, null, true);
   };
 
   // 클릭 및 드래그 
   const startDragItem = (index, e) => {
     e.stopPropagation();
+    e.preventDefault?.();
+    const point = getClientPoint(e);
     const currentZ = nextZIndex.current++;
     setSelectedElemIndex(index);
     setPlacedElements(prev => prev.map((el, i) => (i === index ? { ...el, zIndex: currentZ } : el)));
@@ -246,8 +352,8 @@ export default function DrawingEditor({ onNavigateToArchive }) {
       mode: 'move',
       target: 'elem',
       index,
-      startX: e.clientX,
-      startY: e.clientY,
+      startX: point.clientX,
+      startY: point.clientY,
       initialX: elem.x,
       initialY: elem.y
     };
@@ -255,13 +361,15 @@ export default function DrawingEditor({ onNavigateToArchive }) {
 
   const startResizeItem = (index, e) => {
     e.stopPropagation();
+    e.preventDefault?.();
+    const point = getClientPoint(e);
     const elem = placedElements[index];
     dragInfo.current = {
       mode: 'resize',
       target: 'elem',
       index,
-      startX: e.clientX,
-      startY: e.clientY,
+      startX: point.clientX,
+      startY: point.clientY,
       initialW: elem.width,
       initialH: elem.height
     };
@@ -270,6 +378,8 @@ export default function DrawingEditor({ onNavigateToArchive }) {
   const startDragDrawing = (e) => {
     if (activeTool === 'pen' || activeTool === 'eraser' || !drawingBound) return;
     e.stopPropagation();
+    e.preventDefault?.();
+    const point = getClientPoint(e);
     const currentZ = nextZIndex.current++;
     setSelectedElemIndex('drawing');
     setDrawingZIndex(currentZ);
@@ -282,8 +392,8 @@ export default function DrawingEditor({ onNavigateToArchive }) {
     dragInfo.current = {
       mode: 'move',
       target: 'drawing',
-      startX: e.clientX,
-      startY: e.clientY,
+      startX: point.clientX,
+      startY: point.clientY,
       initialX: drawingBound.x,
       initialY: drawingBound.y,
       initialW: drawingBound.width,
@@ -294,6 +404,8 @@ export default function DrawingEditor({ onNavigateToArchive }) {
 
   const startResizeDrawing = (e) => {
     e.stopPropagation();
+    e.preventDefault?.();
+    const point = getClientPoint(e);
     const tempCanvas = document.createElement('canvas');
     tempCanvas.width = canvasRef.current.width;
     tempCanvas.height = canvasRef.current.height;
@@ -302,8 +414,8 @@ export default function DrawingEditor({ onNavigateToArchive }) {
     dragInfo.current = {
       mode: 'resize',
       target: 'drawing',
-      startX: e.clientX,
-      startY: e.clientY,
+      startX: point.clientX,
+      startY: point.clientY,
       initialX: drawingBound.x,
       initialY: drawingBound.y,
       initialW: drawingBound.width,
@@ -314,9 +426,11 @@ export default function DrawingEditor({ onNavigateToArchive }) {
 
   const handleGlobalMouseMove = (e) => {
     if (!dragInfo.current.mode) return;
+    e.preventDefault?.();
+    const point = getClientPoint(e);
     const { mode, target, index, startX, startY, initialX, initialY, initialW, initialH, snapshotCanvas } = dragInfo.current;
-    const dx = e.clientX - startX;
-    const dy = e.clientY - startY;
+    const dx = point.clientX - startX;
+    const dy = point.clientY - startY;
 
     if (target === 'elem') {
       if (mode === 'move') {
@@ -353,8 +467,11 @@ export default function DrawingEditor({ onNavigateToArchive }) {
   };
 
   const handleGlobalMouseUp = () => {
-    if (dragInfo.current.target === 'drawing') {
-      updateDrawingBoundingBox();
+    if (dragInfo.current.mode) {
+      if (dragInfo.current.target === 'drawing') {
+        updateDrawingBoundingBox();
+      }
+      saveSnapshot(null, null, true);
     }
     dragInfo.current.mode = null;
     dragInfo.current.snapshotCanvas = null;
@@ -417,11 +534,48 @@ export default function DrawingEditor({ onNavigateToArchive }) {
   const isDrawingMode = activeTool === 'pen' || activeTool === 'eraser';
 
   return (
-    <div className="editor-screen" onMouseMove={handleGlobalMouseMove} onMouseUp={handleGlobalMouseUp}>
-
+    <div
+      className="editor-screen"
+      onMouseMove={handleGlobalMouseMove}
+      onMouseUp={handleGlobalMouseUp}
+      onTouchMove={handleGlobalMouseMove}
+      onTouchEnd={handleGlobalMouseUp}
+      onTouchCancel={handleGlobalMouseUp}
+    >
 
       <div className="content-container">
-        <h1 className="title-heading">TITLE TXT</h1>
+        {/* 상단 영역 */}
+        <div className="title-heading">
+          <span className="title-text">TITLE TXT</span>
+          {hasEverModified && (
+            <div className="history-actions">
+              <button 
+                type="button" 
+                className="undo-btn" 
+                onClick={handleUndo} 
+                disabled={historyIndex <= 0}
+                title="되돌리기"
+              >
+                <svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M9 14 4 9l5-5" />
+                  <path d="M4 9h10.5a5.5 5.5 0 0 1 5.5 5.5v0a5.5 5.5 0 0 1-5.5 5.5H11" />
+                </svg>
+              </button>
+              <button 
+                type="button" 
+                className="undo-btn" 
+                onClick={handleRedo} 
+                disabled={historyIndex >= history.length - 1}
+                title="다시 실행"
+              >
+                <svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="m15 14 5-5-5-5" />
+                  <path d="M20 9H9.5A5.5 5.5 0 0 0 4 14.5v0A5.5 5.5 0 0 0 9.5 20H13" />
+                </svg>
+              </button>
+            </div>
+          )}
+        </div>
 
         <div className="main-stage">
           <div className="drawing-frame" id="drawingFrame" onMouseDown={handleFrameClick}>
@@ -440,6 +594,7 @@ export default function DrawingEditor({ onNavigateToArchive }) {
                     zIndex: elem.zIndex || 2
                   }}
                   onMouseDown={(e) => startDragItem(idx, e)}
+                  onTouchStart={(e) => startDragItem(idx, e)}
                 >
                   {elem.type === 'sticker' ? (
                     <img src={elem.imgObj.src} alt={elem.alt} className="sticker-content" />
@@ -459,6 +614,7 @@ export default function DrawingEditor({ onNavigateToArchive }) {
                       <div
                         className="resize-handle"
                         onMouseDown={(e) => startResizeItem(idx, e)}
+                        onTouchStart={(e) => startResizeItem(idx, e)}
                       />
                     </>
                   )}
@@ -477,6 +633,10 @@ export default function DrawingEditor({ onNavigateToArchive }) {
               onMouseMove={draw}
               onMouseUp={stopDrawing}
               onMouseLeave={stopDrawing}
+              onTouchStart={startDrawing}
+              onTouchMove={draw}
+              onTouchEnd={stopDrawing}
+              onTouchCancel={stopDrawing}
             />
 
             {/* 그려진 실제 크기 */}
@@ -491,6 +651,7 @@ export default function DrawingEditor({ onNavigateToArchive }) {
                   zIndex: drawingZIndex + 1
                 }}
                 onMouseDown={startDragDrawing}
+                onTouchStart={startDragDrawing}
               >
                 {selectedElemIndex === 'drawing' && (
                   <>
@@ -504,6 +665,7 @@ export default function DrawingEditor({ onNavigateToArchive }) {
                     <div
                       className="resize-handle"
                       onMouseDown={startResizeDrawing}
+                      onTouchStart={startResizeDrawing}
                     />
                   </>
                 )}
@@ -588,7 +750,6 @@ export default function DrawingEditor({ onNavigateToArchive }) {
                   </div>
                 </div>
 
-              
                 {activeTool === 'pen' && (
                   <div className="field-group" style={{ marginTop: '50px' }}>
                     <span className="field-title">Color</span>

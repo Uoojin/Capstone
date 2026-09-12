@@ -16,7 +16,6 @@
   user-select: none;
 }
 
-
 /* 메인 컨텐츠 */
 .content-container {
   flex: 1;
@@ -27,14 +26,52 @@
 }
 
 .title-heading {
+  width: 1120px;
+  display: grid;
+  grid-template-columns: 700px 350px;
+  column-gap: 70px;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.title-text {
+  grid-column: 1;
+  grid-row: 1;
+  justify-self: start;
   font-size: 26px;
   font-weight: 400;
   letter-spacing: -0.01em;
   color: #111827;
-  margin-bottom: 30px;
-  text-align: center;
-  position: relative;
-  left: -11.5%;
+  text-align: left;
+}
+
+/* 되돌리기 버튼 */
+.history-actions {
+  grid-column: 1;
+  grid-row: 1;
+  justify-self: end;
+  display: inline-flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.undo-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #111827;
+  opacity: 1;
+  transition: opacity 0.15s ease, color 0.15s ease;
+}
+
+.undo-btn:disabled {
+  opacity: 0.25;
+  cursor: default;
+  pointer-events: none;
 }
 
 .main-stage {
@@ -61,12 +98,12 @@
   left: 0;
   cursor: crosshair;
   pointer-events: none;
+  touch-action: none;
 }
 
 .canvas-layer.drawing-active {
   pointer-events: auto;
 }
-
 
 .drawing-bounding-box {
   position: absolute;
@@ -83,6 +120,7 @@
 .elem-wrapper {
   position: absolute;
   cursor: move;
+  touch-action: none;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -135,7 +173,6 @@
   background-color: #DC2626;
 }
 
-
 .resize-handle {
   position: absolute;
   right: -5px;
@@ -147,6 +184,7 @@
   border-radius: 50%;
   cursor: se-resize;
   z-index: 9998;
+  touch-action: none;
 }
 
 /* 우측 패널 */
@@ -186,7 +224,6 @@
   color: #FFFFFF;
 }
 
-
 .settings-block {
   display: flex;
   flex-direction: column;
@@ -203,7 +240,6 @@
   color: #374151;
   margin-bottom: 30px;
 }
-
 
 .slider-track-wrap {
   width: 100%;
@@ -263,7 +299,6 @@
   outline: 2px solid #000000;
   outline-offset: 2px;
 }
-
 
 .rainbow-dot {
   position: relative;
@@ -362,7 +397,6 @@
   color: #ffffff;
 }
 
-
 /* 메시지 모달 */
 .message-modal-overlay {
   position: fixed;
@@ -390,7 +424,6 @@
   font-weight: 500;
   color: #0F172A;
 }
-
 
 .message-textarea {
   width: 100%;
@@ -447,6 +480,7 @@
   cursor: pointer;
 }
 
+/* ------------------------------ */
 @media (max-width: 1024px) {
   .editor-screen {
     height: calc(100vh - 130px);
@@ -458,9 +492,14 @@
   }
 
   .title-heading {
-    font-size: 23px;
+    width: calc(min(62vw, 500px) + min(30vw, 250px) + 36px);
+    grid-template-columns: min(62vw, 500px) min(30vw, 250px);
+    column-gap: 36px;
     margin-bottom: 22px;
-    left: -17%;
+  }
+
+  .title-text {
+    font-size: 23px;
   }
 
   .main-stage {
@@ -515,9 +554,14 @@
   }
 
   .title-heading {
-    font-size: 20px;
+    width: min(100%, 600px);
+    grid-template-columns: 1fr;
+    column-gap: 0;
     margin-bottom: 14px;
-    left: 0;
+  }
+
+  .title-text {
+    font-size: 20px;
   }
 
   .main-stage {

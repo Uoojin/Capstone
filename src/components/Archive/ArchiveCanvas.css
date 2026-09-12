@@ -64,6 +64,7 @@
   height: 100%;
   display: block;
   cursor: grab;
+  touch-action: none;
 }
 
 .main-archive-canvas:active {
@@ -172,7 +173,7 @@
   font-weight: 600;
   display: flex;
   align-items: center;
-  color: #3a13ff;
+  color: #000000;
   margin-left: 4px;
 }
 

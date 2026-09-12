@@ -225,7 +225,7 @@ export default function ProjectDetailPage() {
             </div>
           </section>
 
-          <nav className="d3-bottom-nav">
+          <nav className="d2-bottom-nav">
             <button
               className="nav-arrow-btn prev"
               onClick={() => navigate(`/projects/${prevProject.teamId}`)}

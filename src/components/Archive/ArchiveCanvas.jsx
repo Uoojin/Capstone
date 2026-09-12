@@ -448,6 +448,10 @@ export default function ArchiveCanvas({ onNavigateToEditor }) {
     downTime: 0,
   });
 
+  const getTouchPoint = (e) => {
+    return e.touches?.[0] || e.changedTouches?.[0];
+  };
+
   useEffect(() => {
     const canvas = canvasRef.current;
     const ctx = canvas.getContext('2d');
@@ -1333,6 +1337,27 @@ export default function ArchiveCanvas({ onNavigateToEditor }) {
     mouse.holdProgress = 0;
   };
 
+  const handleTouchStart = (e) => {
+    const point = getTouchPoint(e);
+    if (!point) return;
+    e.preventDefault();
+    handleMouseDown(point);
+  };
+
+  const handleTouchMove = (e) => {
+    const point = getTouchPoint(e);
+    if (!point) return;
+    e.preventDefault();
+    handleMouseMove(point);
+  };
+
+  const handleTouchEnd = (e) => {
+    const point = getTouchPoint(e);
+    if (!point) return;
+    e.preventDefault();
+    handleMouseUp(point);
+  };
+
   // --------------------------------------------------------------
 
   return (
@@ -1404,6 +1429,10 @@ export default function ArchiveCanvas({ onNavigateToEditor }) {
         onMouseMove={handleMouseMove}
         onMouseLeave={handleMouseLeave}
         onMouseUp={handleMouseUp}
+        onTouchStart={handleTouchStart}
+        onTouchMove={handleTouchMove}
+        onTouchEnd={handleTouchEnd}
+        onTouchCancel={handleMouseLeave}
       />
     </div>
   );
