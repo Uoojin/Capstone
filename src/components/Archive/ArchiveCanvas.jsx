@@ -1384,7 +1384,10 @@ export default function ArchiveCanvas({ onNavigateToEditor }) {
             {/* 싱크 및 날짜 */}
             <div className="polaroid-footer-meta">
               <span className="polaroid-sync-info">
-                SYNC 🔗 {formatSyncCount(selectedMessage.syncCount)}
+                SYNC
+                <span className="polaroid-sync-count">
+                  {formatSyncCount(selectedMessage.syncCount)}
+                </span>
               </span>
               <span className="polaroid-date-info">
                 {formatDate(selectedMessage.createdAt)}
